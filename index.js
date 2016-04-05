@@ -1,20 +1,18 @@
-var WebSocketServer = require('ws').Server;
-var ws = new WebSocketServer({port: 7000});
+var io = require('socket.io').listen(7000);
 
-
-ws.on('connection', function connection(ws) {
-    ws.on('message', function incoming(message) {
+io.sockets.on('connection', function (socket) {
+    socket.on('message', function incoming(message) {
         console.info('received: %s', message);
     });
 
     var i = 1;
 
     var notify = setInterval(()=> {
-        ws.send('Here is an update ' + i);
+        socket.emit('notification', 'Here is an update ' + i);
         i++;
     }, 10000);
 
-    ws.on('closedconnection', function() {
+    socket.on('closedconnection', function() {
         clearInterval(notify);
     });
 });
