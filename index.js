@@ -9,9 +9,12 @@ ws.on('connection', function connection(ws) {
 
     var i = 1;
 
-    setInterval(()=> {
-        // if (!ws) { break; }
-        ws.send('Here is an update' + i);
+    var notify = setInterval(()=> {
+        ws.send('Here is an update ' + i);
         i++;
-    }, 3000);
+    }, 10000);
+
+    ws.on('closedconnection', function() {
+        clearInterval(notify);
+    });
 });
